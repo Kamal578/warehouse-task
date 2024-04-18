@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, ProductsModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('POSTGRES_HOST'),

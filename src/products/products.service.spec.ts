@@ -122,7 +122,6 @@ describe('ProductsService', () => {
     it('should update an existing product', async () => {
       const productId = 1;
 
-      // Mock the existing product to be found by findOne
       const existingProduct: Product = {
         id: productId,
         name: 'Existing Product',
@@ -132,7 +131,6 @@ describe('ProductsService', () => {
       };
       productRepositoryMock.findOne.mockResolvedValue(existingProduct);
 
-      // Define the updated product DTO
       const productDtoUpdate = {
         name: 'Updated Product',
         description: 'Updated Description',
@@ -140,16 +138,12 @@ describe('ProductsService', () => {
         price: 200,
       };
 
-      // Define the expected updated product
       const updatedProduct: Product = { id: productId, ...productDtoUpdate };
 
-      // Mock the save method to return the updated product
       productRepositoryMock.save.mockResolvedValue(updatedProduct);
 
-      // Call the update method
       const result = await service.update(productId, productDtoUpdate);
 
-      // Assert that the result matches the expected updated product
       expect(result).toEqual(updatedProduct);
     });
 

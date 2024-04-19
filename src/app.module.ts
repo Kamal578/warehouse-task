@@ -6,12 +6,15 @@ import { ConfigModule } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
 import { ConfigService } from '@nestjs/config';
 import { LoggerService } from './logger/logger.service';
+import { MetricsController } from './metrics/metrics.controller';
+import { MetricsModule } from './metrics/metrics.module';
+import { MetricsService } from './metrics/metrics.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, ProductsModule],
+      imports: [ConfigModule, ProductsModule, MetricsModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('POSTGRES_HOST'),
@@ -26,8 +29,8 @@ import { LoggerService } from './logger/logger.service';
     }),
     ProductsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, LoggerService],
-  exports: [LoggerService],
+  controllers: [AppController, MetricsController],
+  providers: [AppService, LoggerService, MetricsService],
+  exports: [LoggerService, MetricsService],
 })
 export class AppModule {}

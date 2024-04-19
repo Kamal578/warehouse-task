@@ -22,24 +22,50 @@ export class ProductsController {
   ) {}
 
   @Post()
-  create(
+  async create(
     @Body(new ValidationPipe({ transform: true }))
     createProductDto: CreateProductDto,
   ) {
-    this.logger.log('Creating a new product');
-    return this.productsService.create(createProductDto);
+    try {
+      this.logger.log('Creating a new product');
+      return await this.productsService.create(createProductDto);
+    } catch (error) {
+      this.logger.error(
+        `Failed to create a new product: ${error.message}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException(`Failed to create a new product`);
+    }
   }
 
   @Get()
-  findAll() {
-    this.logger.log('Fetching all products');
-    return this.productsService.findAll();
+  async findAll() {
+    try {
+      this.logger.log('Fetching all products');
+      return await this.productsService.findAll();
+    } catch (error) {
+      this.logger.error(
+        `Failed to fetch all products: ${error.message}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException(`Failed to fetch all products`);
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    this.logger.log(`Fetching product with ID: ${id}`);
-    return this.productsService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    try {
+      this.logger.log(`Fetching product with ID: ${id}`);
+      return await this.productsService.findOne(+id);
+    } catch (error) {
+      this.logger.error(
+        `Failed to fetch product with ID ${id}: ${error.message}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException(
+        `Failed to fetch product with ID ${id}`,
+      );
+    }
   }
 
   @Put(':id')
@@ -49,11 +75,7 @@ export class ProductsController {
   ) {
     try {
       this.logger.log(`Updating product with ID: ${id}`);
-      const updatedProduct = await this.productsService.update(
-        +id,
-        updateProductDto,
-      );
-      return updatedProduct;
+      return await this.productsService.update(+id, updateProductDto);
     } catch (error) {
       this.logger.error(
         `Failed to update product with ID ${id}: ${error.message}`,
@@ -66,8 +88,18 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    this.logger.log(`Deleting product with ID: ${id}`);
-    return this.productsService.remove(+id);
+  async remove(@Param('id') id: number) {
+    try {
+      this.logger.log(`Deleting product with ID: ${id}`);
+      return await this.productsService.remove(+id);
+    } catch (error) {
+      this.logger.error(
+        `Failed to delete product with ID ${id}: ${error.message}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException(
+        `Failed to delete product with ID ${id}`,
+      );
+    }
   }
 }

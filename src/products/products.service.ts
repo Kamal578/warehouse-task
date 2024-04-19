@@ -12,18 +12,18 @@ export class ProductsService {
     private readonly productsRepository: Repository<Product>,
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
+  create(createProductDto: CreateProductDto) {
     const product = this.productsRepository.create(createProductDto);
 
-    return await this.productsRepository.save(product);
+    return this.productsRepository.save(product);
   }
 
-  async findAll() {
-    return await this.productsRepository.find();
+  findAll() {
+    return this.productsRepository.find();
   }
 
-  async findOne(id: number) {
-    return await this.productsRepository.findOne({
+  findOne(id: number) {
+    return this.productsRepository.findOne({
       where: { id },
     });
   }

@@ -1,0 +1,24 @@
+postgres:
+  service:
+    type: ClusterIP
+    port: 5432
+
+warehouse:
+  service:
+    type: NodePort
+    port: 3000
+
+prometheus:
+  alertmanager:
+    enabled: false
+  
+  pushgateway:
+    enabled: false
+
+  nodeExporter:
+    enabled: false
+
+grafana:
+  service:
+    type: NodePort
+    port: 3000

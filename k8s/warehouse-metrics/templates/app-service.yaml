@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: warehouse-metrics-service
 spec:
-  type: NodePort  
+  type: NodePort
   selector:
     app: warehouse-metrics
   ports:
     - protocol: TCP
-      port: 3000  
-      targetPort: 3000  
+      port: 3000
+      targetPort: 3000

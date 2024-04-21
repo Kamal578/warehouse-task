@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: warehouse
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  warehouse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:admin@postgres:5432/warehouse
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: warehouse
+      PORT: 3000
+      NODE_ENV: development
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./logs:/usr/src/app/logs
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

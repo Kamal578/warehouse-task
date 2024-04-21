@@ -6,15 +6,14 @@ import { ConfigModule } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
 import { ConfigService } from '@nestjs/config';
 import { LoggerService } from './logger/logger.service';
-import { MetricsController } from './metrics/metrics.controller';
-import { MetricsModule } from './metrics/metrics.module';
-import { MetricsService } from './metrics/metrics.service';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
+    PrometheusModule.register(),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, ProductsModule, MetricsModule],
+      imports: [ConfigModule, ProductsModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('POSTGRES_HOST'),
@@ -29,8 +28,8 @@ import { MetricsService } from './metrics/metrics.service';
     }),
     ProductsModule,
   ],
-  controllers: [AppController, MetricsController],
-  providers: [AppService, LoggerService, MetricsService],
-  exports: [LoggerService, MetricsService],
+  controllers: [AppController],
+  providers: [AppService, LoggerService],
+  exports: [LoggerService],
 })
 export class AppModule {}

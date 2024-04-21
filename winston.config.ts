@@ -31,11 +31,11 @@ export const winstonConfig = {
     }),
     new transports.File({
       // silly log is typically used to log EVERYTHING (each function call, action, variable, etc.)
-      filename: 'silly.log',
+      filename: path.join(logDirectory, 'silly.log'),
       level: 'silly',
     }),
     new transports.File({
-      filename: 'http.log',
+      filename: path.join(logDirectory, 'http.log'),
       level: 'http',
     }),
   ],

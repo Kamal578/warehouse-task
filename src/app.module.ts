@@ -22,7 +22,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: process.env.TYPEORM_SYNC === 'true', // Should not be true in prod
+        synchronize: process.env.NODE_ENV === 'development', // Should not be true in prod
       }),
       inject: [ConfigService],
     }),

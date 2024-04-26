@@ -10,9 +10,6 @@ COPY . .
 
 RUN npm run build
 
-RUN npm run migration:generate --name=PRODUCT
-RUN npm run migration:run
-
 FROM node:21-alpine3.18 as production
 
 ARG NODE_ENV=production
@@ -32,4 +29,4 @@ RUN mkdir -p /usr/src/app/logs
 
 EXPOSE 3000
 
-CMD ["node", "dist/src/main.js"]
+# ENTRYPOINT ["node", "dist/src/main.js"]

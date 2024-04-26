@@ -4,9 +4,9 @@ services:
     image: postgres:16.2
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: warehouse
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_DB: warehouse
     ports:
       - '5432:5432'
     volumes:
@@ -18,11 +18,11 @@ services:
       dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgres://postgres:admin@postgres:5432/warehouse
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: warehouse
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_DB: warehouse
       PORT: 3000
       NODE_ENV: development
     ports:
@@ -38,12 +38,12 @@ services:
       dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgres://postgres:admin@postgres:5432/warehouse
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: warehouse
-      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_DB: warehouse
+      NODE_ENV: production
     depends_on:
       - postgres
     command: npm run migration:run

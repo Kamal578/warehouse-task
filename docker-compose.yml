@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:16.2
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -31,6 +31,22 @@ services:
       - ./logs:/usr/src/app/logs
     depends_on:
       - postgres
+
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:admin@postgres:5432/warehouse
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: warehouse
+      NODE_ENV: development
+    depends_on:
+      - postgres
+    command: npm run migration:run
 
 volumes:
   postgres_data:

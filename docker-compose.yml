@@ -4,9 +4,9 @@ services:
     image: postgres:16.2
     restart: always
     environment:
-      DB_USER: postgres
-      DB_PASSWORD: admin
-      DB_DB: warehouse
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: warehouse
     ports:
       - '5432:5432'
     volumes:
@@ -18,13 +18,13 @@ services:
       dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgres://postgres:admin@postgres:5432/warehouse
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: admin
-      DB_DB: warehouse
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: warehouse
       PORT: 3000
-      NODE_ENV: development
+      NODE_ENV: production
     ports:
       - '3000:3000'
     volumes:

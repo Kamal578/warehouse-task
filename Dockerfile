@@ -10,6 +10,9 @@ COPY . .
 
 RUN npm run build
 
+RUN npm run migration:generate --name=PRODUCT
+RUN npm run migration:run
+
 FROM node:21-alpine3.18 as production
 
 ARG NODE_ENV=production

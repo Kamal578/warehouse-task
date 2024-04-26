@@ -32,21 +32,5 @@ services:
     depends_on:
       - postgres
 
-  migration:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      DATABASE_URL: postgres://postgres:admin@postgres:5432/warehouse
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: admin
-      DB_DB: warehouse
-      NODE_ENV: production
-    depends_on:
-      - postgres
-    command: npm run migration:run
-
 volumes:
   postgres_data:

@@ -6,9 +6,7 @@ rm -rf logs
 rm -rf devLogs
 
 # reinitialize docker workspace
-docker rm warehouse-task-postgres-1 --force
-docker rm warehouse-task-warehouse-1 --force
-#remove dangling images
+docker compose down
 docker rmi $(docker images -f "dangling=true" -q) --force
 docker rmi warehouse-task-warehouse --force
 docker volume rm $(docker volume ls -q)

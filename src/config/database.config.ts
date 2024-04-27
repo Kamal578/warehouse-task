@@ -2,6 +2,7 @@ import { registerAs } from '@nestjs/config';
 
 interface DatabaseConfig {
   type: 'postgres';
+  url: string;
   host: string;
   port: number;
   username: string;
@@ -18,6 +19,7 @@ export default registerAs(
   'database',
   (): DatabaseConfig => ({
     type: 'postgres',
+    url: process.env.DATABASE_URL || '',
     host: process.env.POSTGRES_HOST || 'localhost',
     port: parseInt(process.env.POSTGRES_PORT, 10) || 5432,
     username: process.env.POSTGRES_USER || '',
@@ -26,7 +28,7 @@ export default registerAs(
     entities: [`${__dirname}/../**/*.entity{.ts,.js}`],
     synchronize: process.env.NODE_ENV === 'development',
     migrations: [`${__dirname}/../../db/migrations/*{.ts,.js}`],
-    migrationsRun: true,
+    migrationsRun: false,
     migrationsTableName: 'migrations',
   }),
 );

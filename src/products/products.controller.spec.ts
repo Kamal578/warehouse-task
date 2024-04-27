@@ -156,7 +156,7 @@ describe('ProductsController', () => {
           new NotFoundException(`Product #${productId} not found`),
         );
 
-      await expect(controller.remove(productId)).rejects.toThrowError(
+      await expect(controller.remove(productId)).rejects.toThrow(
         NotFoundException,
       );
     });

@@ -10,6 +10,7 @@ interface DatabaseConfig {
   entities: string[];
   synchronize: boolean;
   migrations: string[];
+  migrationsRun: boolean;
   migrationsTableName: string;
 }
 
@@ -25,6 +26,7 @@ export default registerAs(
     entities: [`${__dirname}/../**/*.entity{.ts,.js}`],
     synchronize: process.env.NODE_ENV === 'development',
     migrations: [`${__dirname}/../../db/migrations/*{.ts,.js}`],
+    migrationsRun: true,
     migrationsTableName: 'migrations',
   }),
 );

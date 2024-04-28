@@ -7,6 +7,7 @@ import { LoggerService } from './logger/logger.service';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppConfig, DatabaseConfig } from './config';
+import { LoggingInterceptor } from './logging.interceptor';
 
 @Module({
   imports: [
@@ -26,7 +27,14 @@ import { AppConfig, DatabaseConfig } from './config';
     ProductsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, LoggerService],
+  providers: [
+    AppService,
+    LoggerService,
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: LoggingInterceptor,
+    },
+  ],
   exports: [LoggerService],
 })
 export class AppModule {}

@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Repository } from 'typeorm';
@@ -52,33 +57,41 @@ export class ProductsService {
       endpoint: 'products',
     });
 
-    // DB operation
-    const product = this.productsRepository.create(createProductDto);
-    const existingProduct = await this.productsRepository.findOne({
-      where: { name: product.name },
-    });
+    try {
+      // Check if a product with the same name already exists
+      const existingProduct = await this.productsRepository.findOne({
+        where: { name: createProductDto.name },
+      });
 
-    // check if product already exists not to violate unique constraint
-    if (existingProduct) {
+      if (existingProduct) {
+        this.errorCount.inc({
+          method: 'POST',
+          endpoint: 'products',
+        });
+        throw new ConflictException('Product with this name already exists');
+      }
+
+      // Save the new product
+      const product = this.productsRepository.create(createProductDto);
+      const savedProduct = await this.productsRepository.save(product);
+
+      // Increment DB query count
+      this.dbQueryCount.inc({
+        method: 'POST',
+        endpoint: 'products',
+      });
+
+      endTimer();
+
+      return savedProduct;
+    } catch (error) {
+      // Handle other errors
       this.errorCount.inc({
         method: 'POST',
         endpoint: 'products',
       });
-      throw new Error('Product already exists');
+      throw new InternalServerErrorException('Failed to create product');
     }
-
-    const savedProduct = this.productsRepository.save(product);
-
-    // Increment DB query count
-
-    this.dbQueryCount.inc({
-      method: 'POST',
-      endpoint: 'products',
-    });
-
-    endTimer();
-
-    return savedProduct;
   }
 
   findAll() {

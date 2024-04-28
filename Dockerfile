@@ -29,4 +29,4 @@ RUN mkdir -p /usr/src/app/logs
 
 EXPOSE 3000
 
-# ENTRYPOINT ["node", "dist/src/main.js"]
+ENTRYPOINT ["sh", "app-start.sh"]

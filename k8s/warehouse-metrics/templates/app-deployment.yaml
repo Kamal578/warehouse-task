@@ -20,12 +20,12 @@ spec:
     spec:
       containers:
         - name: warehouse-metrics
-          image: kamal578/warehouse-metrics
+          image: kamal578/warehouse-metrics:0.0.1
           ports:
             - containerPort: 3000
           env:
             - name: DATABASE_URL
-              value: postgres://postgres:admin@postgres:5432/warehouse
+              value: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
             - name: POSTGRES_HOST
               value: postgres
             - name: POSTGRES_PORT
@@ -39,7 +39,7 @@ spec:
             - name: PORT
               value: '3000'
             - name: NODE_ENV
-              value: development
+              value: production
           volumeMounts:
             - name: logs-volume
               mountPath: /usr/src/app/logs

@@ -43,7 +43,7 @@ export class ProductsService {
     });
   }
 
-  create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto) {
     const endTimer = this.requestDuration.startTimer();
 
     // Increment request count
@@ -54,6 +54,19 @@ export class ProductsService {
 
     // DB operation
     const product = this.productsRepository.create(createProductDto);
+    const existingProduct = await this.productsRepository.findOne({
+      where: { name: product.name },
+    });
+
+    // check if product already exists not to violate unique constraint
+    if (existingProduct) {
+      this.errorCount.inc({
+        method: 'POST',
+        endpoint: 'products',
+      });
+      throw new Error('Product already exists');
+    }
+
     const savedProduct = this.productsRepository.save(product);
 
     // Increment DB query count

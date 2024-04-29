@@ -23,23 +23,9 @@ spec:
           image: kamal578/warehouse-metrics:0.0.1
           ports:
             - containerPort: 3000
-          env:
-            - name: DATABASE_URL
-              value: postgres://postgres:admin@postgres:5432/warehouse
-            - name: POSTGRES_HOST
-              value: postgres
-            - name: POSTGRES_PORT
-              value: '5432'
-            - name: POSTGRES_USER
-              value: postgres
-            - name: POSTGRES_PASSWORD
-              value: admin
-            - name: POSTGRES_DB
-              value: warehouse
-            - name: PORT
-              value: '3000'
-            - name: NODE_ENV
-              value: production
+          envFrom:
+            - configMapRef:
+                name: app-config
           volumeMounts:
             - name: logs-volume
               mountPath: /usr/src/app/logs

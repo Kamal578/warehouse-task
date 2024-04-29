@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Create Namespace
-echo "Creating Namespace..."
-kubectl create ns warehouse-metrics
-
 # Deploy PersistentVolumeClaims
 echo "Deploying PersistentVolumeClaims..."
 kubectl apply -f postgres-pvc.yaml

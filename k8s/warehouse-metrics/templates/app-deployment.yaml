@@ -25,7 +25,7 @@ spec:
             - containerPort: 3000
           env:
             - name: DATABASE_URL
-              value: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+              value: postgres://postgres:admin@postgres:5432/warehouse
             - name: POSTGRES_HOST
               value: postgres
             - name: POSTGRES_PORT

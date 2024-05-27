@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: warehouse-metrics
-          image: kamal578/warehouse-metrics:0.0.1
+          image: kamal578/warehouse-metrics:0.0.3 # error test version
           ports:
             - containerPort: 3000
           envFrom:

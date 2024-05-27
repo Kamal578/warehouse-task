@@ -9,7 +9,46 @@ warehouse:
     port: 3000
 
 prometheus:
+  service:
+    type: NodePort
+    port: 9090
+    nodePort: 30001
   alertmanager:
+    enabled: true
+    service:
+      type: NodePort
+      port: 9093
+      nodePort: 30006
+    config:
+      global:
+        resolve_timeout: 5m
+      route:
+        receiver: 'email-alert'
+      receivers:
+        - name: 'email-alert'
+          email_configs:
+            - to: 'ahmadov.kamal423@gmail.com'
+              from: 'ahmadov.kamal423@gmail.com'
+              smarthost: 'smtp.gmail.com:465'
+              auth_username: 'ahmadov.kamal423@gmail.com'
+              auth_password: 'mkremxkrschzddve'
+              require_tls: true
+    server:
+      configMaps:
+        - name: prometheus-rules
+          file: alerts.yml
+      additionalScrapeConfigs:
+        - job_name: 'warehouse-metrics'
+          scrape_interval: 15s
+          static_configs:
+            - targets: ['warehouse-metrics:3000']
+      rule_files:
+        - /etc/prometheus/alerts.yaml
+      alertmanagers:
+        - static_configs:
+            - targets:
+                - alertmanager:9093
+  nodeExporter:
     enabled: false
   
   pushgateway:
@@ -22,3 +61,6 @@ grafana:
   service:
     type: NodePort
     port: 3000
+    adminUser: admin
+    adminPassword: admin
+    nodePort: 30002

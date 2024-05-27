@@ -23,3 +23,5 @@
 .vscode/
 
 templates/scripts/
+
+prom-orig.yaml

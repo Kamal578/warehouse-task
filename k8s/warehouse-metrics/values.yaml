@@ -7,12 +7,9 @@ warehouse:
   service:
     type: NodePort
     port: 3000
+    nodePort: 30003
 
 prometheus:
-  service:
-    type: NodePort
-    port: 9090
-    nodePort: 30001
   alertmanager:
     enabled: true
     service:
@@ -23,39 +20,47 @@ prometheus:
       global:
         resolve_timeout: 5m
       route:
+        group_by: ['job']
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 1h
         receiver: 'email-alert'
+        routes:
+          - match:
+              severity: critical
+            receiver: 'email-alert'
       receivers:
         - name: 'email-alert'
           email_configs:
-            - to: 'ahmadov.kamal423@gmail.com'
+            - send_resolved: true
+              to: 'ahmadov.kamal423@gmail.com'
               from: 'ahmadov.kamal423@gmail.com'
-              smarthost: 'smtp.gmail.com:465'
+              smarthost: 'smtp.gmail.com:587'
               auth_username: 'ahmadov.kamal423@gmail.com'
               auth_password: 'mkremxkrschzddve'
               require_tls: true
-    server:
-      configMaps:
-        - name: prometheus-rules
-          file: alerts.yml
-      additionalScrapeConfigs:
-        - job_name: 'warehouse-metrics'
-          scrape_interval: 15s
-          static_configs:
-            - targets: ['warehouse-metrics:3000']
-      rule_files:
-        - /etc/prometheus/alerts.yaml
-      alertmanagers:
-        - static_configs:
-            - targets:
-                - alertmanager:9093
-  nodeExporter:
-    enabled: false
-  
-  pushgateway:
-    enabled: false
+  server:
+    service:
+      type: NodePort
+      port: 9090
+      nodePort: 30001
+    additionalScrapeConfigs:
+      - job_name: 'warehouse-metrics'
+        scrape_interval: 15s
+        static_configs:
+          - targets: ['warehouse-metrics:3000']
 
-  nodeExporter:
-    enabled: false
+  additionalPrometheusRules:
+    - name: warehouse-metrics-rules
+      rules:
+        - alert: HighHttp500ErrorRate
+          expr: sum(rate(http_500_error_count[2m])) > 40
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "High HTTP 500 Error Rate"
+            description: "HTTP 500 errors are above 40 requests per minute for more than 2 minutes."
 
 grafana:
   service:

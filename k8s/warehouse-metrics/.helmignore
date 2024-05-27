@@ -22,5 +22,4 @@
 *.tmproj
 .vscode/
 
-templates/*.sh
-templates/*.txt
+templates/scripts/
